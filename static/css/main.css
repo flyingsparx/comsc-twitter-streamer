@@ -1,0 +1,156 @@
+*{
+    font-family:'Helvetica Neue', 'Helvetica', 'Sans-serif';
+}
+
+html,body{
+    padding:0px;
+    margin:0px;
+}
+
+body{
+    background:rgb(240,240,240);
+}
+
+header{
+    width:31%;
+    position:absolute;
+    left:10px;
+    top:10px;    
+}
+header .logo{
+    height:100px;
+    width:105px;
+    background:url('/static/media/logo.jpg');
+    background-size:cover;
+    display:inline-block;
+    float:left;
+    margin-right:15px;
+}
+header h1{
+    display:inline-block; 
+    color:rgb(100,100,100);
+    font-size:25px;
+    font-weight:100;
+    margin-top:0px;
+    margin-bottom:0px;
+}
+
+h1.main_hash{
+    color:rgb(100,100,100);
+    font-weight:200;
+    font-size:30px;
+    text-align:center;
+    display:block;
+    margin-top:30px;
+    margin-bottom:30px;
+    padding:8px;
+    border: 1px dotted #d3374a;
+    border-radius:4px;
+}
+h2{
+    color:rgb(150,150,150);
+    font-weight:200;
+}
+h2 img{
+    float:left;
+    width:30px;
+    opacity:0.4;    
+    margin-right:20px;
+}
+
+#content{
+    width:66%;
+    margin:0px;
+    float:right;
+    margin-right:10px;
+    position:relative;
+}
+
+.column{
+    width:46%;
+    margin:0px 1%;
+    display:inline-block;
+    float:left;
+}
+
+ul.tweet_list{
+    width:100%;
+    display:block;
+    margin:0px;
+    padding:0px;
+    padding-top:15px;
+}    
+ul.tweet_list li{
+    display:block;
+    margin:20px 0px;
+    padding:0px;
+    padding-bottom:10px;
+    border-bottom:1px dotted rgb(200,200,200);
+}
+ul.tweet_list li .avatar{
+    width:50px;
+    float:left;
+    margin-right:10px; 
+    border-radius:3px;
+}
+ul.tweet_list li .username{
+    font-size:15px;
+    color:rgb(100,100,100);
+    margin-bottom:0px;
+    padding-bottom:5px;
+    border-bottom:1px dashed rgb(200,200,200);
+}
+ul.tweet_list li .username .name{
+    color:rgb(150,150,150);
+    font-size:12px;
+    margin-left:10px;
+}
+ul.tweet_list li .text{
+    font-size: 15px;
+    text-color:rgb(50,50,50);
+    margin-left: 60px;
+    margin-top:4px;
+    margin-bottom:0px;
+}
+
+ul.tweet_list#highlighted_tweets li{
+}
+
+#latest_image{
+    margin-top:30px;
+    margin-bottom:10px;
+    width:100%;
+    max-height:300px;
+    overflow:hidden;
+    position:relative;
+}   
+#latest_image p{
+    display:block;
+    padding:5px;
+    background:rgba(0,0,0,0.6);
+    color:white;
+    position:absolute;
+    bottom:-5px;
+    left:0px;
+    font-size:13px;
+}
+#latest_image img{
+    width:100%;
+}
+
+#gallery{
+    text-align:center;
+}
+#gallery .thumb{
+    width:50%;
+    height:100px;
+    overflow:hidden;
+    float:left; 
+}
+#gallery .thumb img{
+    width:100%;
+}
+
+li div{
+    cursor:pointer;
+}

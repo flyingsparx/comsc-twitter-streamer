@@ -1,0 +1,108 @@
+<!doctype html> 
+<html lang="en"> 
+    <head>
+        <title>COMSC Twitter-Streamer</title>
+        <link href="/static/css/main.css" type="text/css" rel="stylesheet"/> 
+    </head>
+    <body>
+        <header>
+            <div class="logo"></div>
+            <h1>School of<br /><b>Computer Science</b><br />&amp; <b>Informatics</b></h1>
+            <div></div>
+            <div id="latest_image"><img src=""/><p></p></div>
+            <div id="gallery"></div> 
+        </header>
+        <div id="content">
+            <div class="column">
+                <h2>Tweets <img src="/static/media/twitter_black.png" /></h2>
+                <ul id="all_tweets" class="tweet_list"></ul>
+            </div>
+            <div class="column">
+                <h2>Highlights <img src="/static/media/star.png" /></h2> 
+                <h1 class="main_hash">{{ main_hashtag }}</h1>
+                <ul id="highlighted_tweets" class="tweet_list"></ul>
+            </div>
+        </div>
+        <script src="/static/js/jquery.min.js"></script>
+        <script src="/static/js/masonry.pkgd.min.js"></script>
+        <script src="/static/js/d3.min.js"></script>
+        <script src="/static/js/d3.cloud.js"></script>
+        <script>
+            var last_id = 0;
+            var last_media_id = 0;
+            var tweet_ids = [];
+            var media_ids = [];
+            $("#gallery").masonry({itemSelector:'img'});
+            
+            function update_listeners(){
+                $("li").mouseenter(function(){
+                    $(this).find("div").css({'display':'block'});
+                });
+                $("li").mouseleave(function(){
+                    $(this).find("div").css({'display':'none'});
+                });
+                $("li .hide").click(function(){
+                    var p = $(this).parents('li');
+                    p.css({'display':'none'});
+                });
+                $("li .promote").click(function(){
+                    var p = $(this).parents('li');
+                    $("#highlighted_tweets").prepend('<li>'+p.html()+'</li>');
+                });
+            }
+            function get_tweet_html(list,tweet){
+                var s = '<li class="hidden" style="display:none" id="'+list+'_'+tweet.tweet_id+'">';
+                s = s + '<img src="'+tweet.user_avatar+'" class="avatar" />';
+                s = s + '<p class="username">@'+tweet.user_username+'<span class="name">('+tweet.user_name+')</span></p>';
+                s = s + '<p class="text">'+tweet.tweet_text+'</p>';
+                s = s + '<div style="display:none;"><span class="hide">Hide</span> - <span class="promote">promote</span></div>';
+                s = s + '</li>';
+                return s;
+            }
+            function get_tweets(){
+                $.get("/get_more/"+last_id+'/'+last_media_id, function(data){ 
+                    data = JSON.parse(data);
+                    for(var i = 0; i < data.tweets.length; i++){
+                        var tweet = data.tweets[i];
+                        if(tweet_ids.indexOf(tweet.tweet_id)==-1){
+                            if(tweet.tweet_id >= last_id){last_id = tweet.tweet_id;}
+                            var main_html = get_tweet_html('main', tweet);
+                            var high_html = get_tweet_html('high', tweet);
+                            $("#all_tweets").prepend(main_html);
+                            if(tweet.highlighted == true){
+                                $("#highlighted_tweets").prepend(high_html);
+                            }
+                            tweet_ids.push(tweet.tweet_id);
+                        }
+                    }
+                    $(".hidden").each(function (i) {
+                        $(this).delay(300*i).slideDown(function(){
+                            $(this).removeClass("hidden");        
+                        });
+                    });
+                    for(var i = 0; i < data.media.length; i++){
+                        var media = data.media[i];
+                        if(media_ids.indexOf(media.tweet_id)==-1){  
+                            $("#latest_image").fadeOut(function(){
+                                $("#latest_image").stop().fadeIn();
+                            });
+                            if(media.tweet_id >= last_media_id){last_media_id = media.tweet_id;} 
+                            var imHtml = '<div class="thumb"><img src="'+media.url+'"/></div>';
+                            $("#latest_image img").attr("src",media.url);
+                            $("#latest_image p").html('@'+media.user_username+': '+media.tweet_text);
+                            $("#gallery").prepend(imHtml).masonry({itemSelector : 'div'});//.masonry('prepended',imHtml);
+                            media_ids.push(media.tweet_id);
+                        }
+                    }
+                    //$("#latest_image").stop().fadeIn();
+                }).fail(function(){
+                    console.log("connection error");
+                }).always(function(){
+                    update_listeners();
+                    setTimeout(function(){get_tweets();},5000);
+                });
+            }
+            get_tweets();
+        </script>
+    </body>
+</html>
