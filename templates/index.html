@@ -9,8 +9,10 @@
             <div class="logo"></div>
             <h1>School of<br /><b>Computer Science</b><br />&amp; <b>Informatics</b></h1>
             <div></div>
-            <div id="latest_image"><img src=""/><p></p></div>
-            <div id="gallery"></div> 
+            <h2 style="margin-top:30px;">Highlights <img src="/static/media/star.png" /></h2>
+            <!--<h1 class="main_hash">{{ main_hashtag }}</h1>-->
+            <ul id="highlighted_tweets" class="tweet_list"></ul>
+
         </header>
         <div id="content">
             <div class="column">
@@ -18,9 +20,8 @@
                 <ul id="all_tweets" class="tweet_list"></ul>
             </div>
             <div class="column">
-                <h2>Highlights <img src="/static/media/star.png" /></h2> 
-                <h1 class="main_hash">{{ main_hashtag }}</h1>
-                <ul id="highlighted_tweets" class="tweet_list"></ul>
+                <div id="latest_image"><img class="deletable" src=""/><p></p></div>
+                <div id="gallery"></div> 
             </div>
         </div>
         <script src="/static/js/jquery.min.js"></script>
@@ -31,21 +32,32 @@
             var last_id = 0;
             var last_media_id = 0;
             var tweet_ids = [];
-            var media_ids = [];
+            var media_urls = [];
             $("#gallery").masonry({itemSelector:'img'});
             
             function update_listeners(){
+                $("img.deletable").click(function(event){
+                    event.stopImmediatePropagation();
+                    if($(this).parent('div').attr("id") == "latest_image"){
+                        $(this).parent('div').css({'display':'none'});
+                    }
+                    if($(this).parent('div').hasClass("thumb")){
+                        $(this).parent('.thumb').css({'display':'none'});
+                    }
+                });
                 $("li").mouseenter(function(){
                     $(this).find("div").css({'display':'block'});
                 });
                 $("li").mouseleave(function(){
                     $(this).find("div").css({'display':'none'});
                 });
-                $("li .hide").click(function(){
+                $("li .hide").click(function(event){
+                    event.stopImmediatePropagation();
                     var p = $(this).parents('li');
                     p.css({'display':'none'});
                 });
-                $("li .promote").click(function(){
+                $("li .promote").click(function(event){
+                    event.stopImmediatePropagation();
                     var p = $(this).parents('li');
                     $("#highlighted_tweets").prepend('<li>'+p.html()+'</li>');
                 });
@@ -82,16 +94,16 @@
                     });
                     for(var i = 0; i < data.media.length; i++){
                         var media = data.media[i];
-                        if(media_ids.indexOf(media.tweet_id)==-1){  
+                        if(media_urls.indexOf(media.url)==-1){  
                             $("#latest_image").fadeOut(function(){
                                 $("#latest_image").stop().fadeIn();
                             });
                             if(media.tweet_id >= last_media_id){last_media_id = media.tweet_id;} 
-                            var imHtml = '<div class="thumb"><img src="'+media.url+'"/></div>';
+                            var imHtml = '<div class="thumb"><img class="deletable" src="'+media.url+'"/></div>';
                             $("#latest_image img").attr("src",media.url);
                             $("#latest_image p").html('@'+media.user_username+': '+media.tweet_text);
                             $("#gallery").prepend(imHtml).masonry({itemSelector : 'div'});//.masonry('prepended',imHtml);
-                            media_ids.push(media.tweet_id);
+                            media_urls.push(media.url);
                         }
                     }
                     //$("#latest_image").stop().fadeIn();
