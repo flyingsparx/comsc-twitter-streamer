@@ -1,6 +1,6 @@
 *.pyc
-config.py
 .DS_Store
 *.db
 *.swp
 naughty.txt
+twitter_credentials.json

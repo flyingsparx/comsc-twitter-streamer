@@ -4,11 +4,6 @@ from tweepy.streaming import StreamListener
 import sqlite3, json, os
 import config
 
-ckey = config.twitter['consumer_key']
-csecret = config.twitter['consumer_secret']
-atoken = config.twitter['access_token']
-asecret = config.twitter['access_secret']
-
 buffered_list = []
 cursor = None
 con = None
@@ -91,11 +86,21 @@ def init_db():
                 url TEXT)""")
     con.commit()
     con.close()
-                
+
+def load_twitter_credentials():
+    try:
+        json_file = open("twitter_credentials.json", "r")
+        json_data = json_file.read()
+        credentials = json.loads(json_data)
+        return credentials
+    except Exception as e:
+        print "Could not load Twitter credentials ffrom twitter_credentials.json."
+        exit()
 
 def start_streamer():
     init_db()
-    auth = OAuthHandler(ckey, csecret)
-    auth.set_access_token(atoken, asecret)
+    t_creds = load_twitter_credentials()
+    auth = OAuthHandler(t_creds['consumer_key'], t_creds['consumer_secret'])
+    auth.set_access_token(t_creds['access_token'], t_creds['access_secret'])
     twitterStream = Stream(auth, stream_listener())
     twitterStream.filter(track=config.stream['terms'])
