@@ -1,12 +1,8 @@
-web_server = dict(
-    secret_key = 'djhkjdqkdjLHSLAK'
-)
-
 stream = dict(
     db_file = 'tweets.db',
     naughty_file = 'naughty.txt',
-    terms = ["cardiff university", "csicardiff", "cardiff"],
+    terms = ["cardiff university", "csicardiff", "cardiff open day"],
     main_hashtag = '#openDay',
-    highlight_terms = ['comsc', 'csicardiff', 'the']
+    highlight_terms = ['@csicardiff', 'comsc', 'csicardiff', '#openday', '#cardiffopenday']
 )
 

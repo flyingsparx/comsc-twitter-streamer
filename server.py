@@ -3,7 +3,6 @@ import sqlite3, json
 import config
 
 app = Flask(__name__)
-app.secret_key = config.web_server['secret_key']
 
 class DatabaseManager():
     def __init__(self):
